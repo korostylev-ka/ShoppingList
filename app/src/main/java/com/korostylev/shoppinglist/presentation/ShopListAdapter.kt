@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.korostylev.shoppinglist.R
@@ -13,8 +14,13 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopListViewHolder>
 
     var shopList = listOf<ShopItem>()
         set(value) {
+//            создаем объект коллбека со старым и новым списком
+            val callback = ShopListDiffCallback(shopList, value)
+//            вычисляем изменения в новом списке
+            val diffResult = DiffUtil.calculateDiff(callback)
+//            сообщаем изменения адаптеру
+            diffResult.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
         }
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
